@@ -1,92 +1,119 @@
-# Javascript bot and automation detection library
+<div align="center">
 
-**NOTE**: The research and evaluation of this library was done in 2021. I can
-not guarantee that it is still able to detect all listed bots, nor do I provide
-support for this library. I also do not plan on continuing the development.
+  <img src="https://img.shields.io/badge/🛡️%20Values-Protected-32CD32?style=for-the-badge" alt="Values">
+  <br />
+  <br />
 
-## Detected bots
+  <h1>🛡️ Athena Shield</h1>
+  <p>
+    <b>The Next-Generation Bot & Fraud Detection Platform.</b>
+  </p>
 
-The library is aiming to detect the following tools primarily:
+  <p>
+    <a href="#-features">Features</a> •
+    <a href="#-architecture">Architecture</a> •
+    <a href="#-getting-started">Getting Started</a> •
+    <a href="#-detection-logic">Detection Logic</a>
+  </p>
 
-* PhantomJS ([https://github.com/ariya/phantomjs](https://github.com/ariya/phantomjs))
-* Selenium Chrome/Firefox ([https://github.com/SeleniumHQ/selenium](https://github.com/SeleniumHQ/selenium))
-* Selenium undetected_chromedriver ([https://github.com/ultrafunkamsterdam/undetected-chromedriver](https://github.com/ultrafunkamsterdam/undetected-chromedriver))
-* Selenium stealth ([https://github.com/diprajpatra/selenium-stealth](https://github.com/diprajpatra/selenium-stealth))
-* Puppeteer Chrome/Firefox ([https://github.com/puppeteer/puppeteer](https://github.com/puppeteer/puppeteer))
-* Puppeteer-extra-plugin-stealth ([https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth](https://github.com/berstend/puppeteer-extra/tree/master/packages/puppeteer-extra-plugin-stealth))
-* Playwright Chrome/Firefox/WebKit ([https://github.com/microsoft/playwright](https://github.com/microsoft/playwright))
-* SecretAgent/Hero ([https://github.com/ulixee/secret-agent](https://github.com/ulixee/secret-agent))
+  <p>
+    <img src="https://img.shields.io/badge/Python-FastAPI-009688?style=flat-square&logo=python&logoColor=white" alt="FastAPI" />
+    <img src="https://img.shields.io/badge/React-Vite-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React" />
+    <img src="https://img.shields.io/badge/ML-Scikit--Learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white" alt="ML" />
+    <img src="https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white" alt="Docker" />
+  </p>
+</div>
 
-These are higher level bots, which have a JavaScript engine enabled. To fully
-utilize the bot detecting capabilities you should ensure that your site cannot
-be used without enabling JavaScript.
+---
 
-You can also find some documentation for each bot detection signal under `src/collector/detections`.
+## ⚡ Overview
 
-## Demo
+**Athena Shield** is a research-grade security platform designed to detect and mitigate sophisticated automated threats. Moving beyond simple IP blocking, it employs a multi-layered defense strategy combining:
 
-The demo page is accessible at [https://bot.dobiadi.dev](https://bot.dobiadi.dev).
-(Please do not use the 'Back' button on your browser because then you will always
-get `Invalid proof of work` as a result)
+*   **Behavioral Biometrics**: Analyzes mouse kinematics (curvature, entropy, speed) to distinguish human jitter from robotic linearity.
+*   **Honeypot Traps**: Invisible UI elements that tempt bots into revealing themselves.
+*   **Machine Learning**: Anomaly detection engine trained to identify "superhuman" interaction patterns.
+*   **Browser Fingerprinting**: Identifies headless environments (Puppeteer, Selenium) via canvas and subtle rendering differences.
 
-## Usage
+<br />
 
-This library is not published as an npm package.
+## 🛡️ Architecture
 
-You can build it using
+Built on a high-performance **Microservices** architecture for scalability and resilience.
+
+| Component | Tech Stack | Responsibility |
+|:--- |:--- |:--- |
+| **🧠 Cortex Engine** | Python, FastAPI, Scikit-Learn | The brain. Processes telemetry, runs ML inference, and issues verdicts. |
+| **👁️ Overwatch UI** | React, Vite, Recharts | Real-time operations dashboard. Visualizes threat scores and attack vectors. |
+| **🕸️ Sentinel SDK** | TypeScript, JavaScript | Lightweight client library (~12kb). Collects behavioral data and fingerprints. |
+| **🧱 Fortress Data** | Redis, Docker | High-speed sliding window rate limiting and event aggregation. |
+
+<br />
+
+## 🚀 Getting Started
+
+Deploy the entire stack in under 2 minutes using Docker.
+
+### Prerequisites
+*   Docker & Docker Compose
+*   (Optional) Node.js & Python for local dev
+
+### 📦 One-Click Deployment
+
 ```bash
-npm run build
+# 1. Clone the repository
+git clone https://github.com/your-username/athena-shield.git
+cd athena-shield
+
+# 2. Launch the Fortress 🛡️
+sudo docker-compose up --build -d
 ```
 
-This will output two files, `botdetect.min.js` and `botdetect-clean.min.js`. The
-only difference between the two is whether it includes polyfills or not.
+### 🚦 Verification
+*   **Dashboard**: Visit `http://localhost`
+*   **API Documentation**: Visit `http://localhost:8000/docs`
 
-Include one of them on your website and then you can utilize the bot detection functionality.
+<br />
 
-Initialize it on site load:
-```javascript
-BotDetect.collector.enableTraps();
+## 🧠 Detection Logic (The "Secret Sauce")
+
+Athena Shield uses a **Weighted Confidence Scoring** system. It doesn't just block IPs; it builds a profile.
+
+```python
+final_score = (
+    (behavior_score * 0.5) +   # ML: Mouse Jitter, Path Efficiency
+    (honeypot_score * 1.0) +   # Critical: Hidden Field Interaction
+    (fingerprint_score * 0.3)  # Headless Browser Traits
+)
+
+if final_score > 0.8:
+    action = "BLOCK"
+elif final_score > 0.5:
+    action = "CHALLENGE" (CAPTCHA)
 ```
 
-Then later on a user action that requires validation:
-```javascript
-const results = await BotDetect.collector.collect();
-// 'results' will contain a list of suspicious flags related to bots
-// You can do whatever you want with it, but a default evaluator is available
-// as BotDetect.detector to return 'human'/'bot' based on the flags.
+### 🧬 ML Capabilities
+*   **Mouse Variance**: Humans have micro-tremors; bots move in perfect Bezier curves.
+*   **Time-to-Action**: Analyzes reaction times. <50ms reactions are flagged as "Superhuman".
 
-const output = BotDetect.detector.detect(results);
-// By default the output is either 'bot' or 'human'
-```
+<br />
 
-## Considerations
+## ⚔️ Attack Simulator
 
-It is always better to catch threats as soon as possible so if you can, you should
-also enable server-side protections as well.
-For example the demo page uses HAProxy with the following features:
-* Request rate limiting on a per IP basis
-* IP blacklist based on https://github.com/stamparm/ipsum
-* User-Agent HTTP header filtering based on https://github.com/JayBizzle/Crawler-Detect/blob/master/src/Fixtures/Crawlers.php
-* Proper Content-Security-Policy header to prohibit the browser from loading unwanted scripts
+We verify our defenses against our own offensive tools.
 
-Additionally, the method described in the `Usage` section of this document is just a quick example.
-If you purely rely on JavaScript to block requests from bots to your backend, then it is easy to bypass.
+*   `dumb_bot.py`: Basic requests script (Caught by User-Agent).
+*   `smart_bot.js`: Advanced **Puppeteer Stealth** bot designed to mimic humans.
+    *   *Result*: Originally bypassed V1, now caught by **Behavioral ML** (See `docs/evasion-log.md`).
 
-Imagine that someone can just send POST requests to `/login` via `curl` without even loading your page.
-The simplest way to solve this is via CSRF tokens:
-* Generate a random token server-side and send it to the client when they load the login page.
-* When they submit the login form, also pass this token alongside other data in the POST request.
-* The server should validate that the token is present, and it has the expected value.
+<br />
 
-Note that in practice it only ensures that the attacker loaded the webpage first before sending a POST
-request. It is still possible to automate this via `curl` if you can parse out the token from the HTML.
+## 📜 License
 
-The demo page follows a similar logic:
-* The webserver generates a random token and sends it to the client when they load the page.
-* The `BotDetect` library's `detector` can take an arbitrary function via its `BotDetect.detector.setProofOfWorkFn`
-  method. This function takes two arguments; the bot detection result (boolean) and the token (string),
-  and outputs a new token generated from the two. This new token is then added to the POST request.
-* The server receives this new token. It also knows the original token and the proofOfWork function and
-  the fact that the bot detection can result in either true or false. So it calculates both possibilities
-  and compares them to the received token to determine whether the request came from a bot or a human.
-  Of course invalid tokens are simply rejected.
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+  <b>Built with 💻 & 🛡️ by Abdul Salam</b>
+</div>

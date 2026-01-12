@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+redis
+pydantic-settings
+uuid
+requests
+numpy
+scikit-learn

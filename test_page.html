@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Athena Shield Test Page</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .fail {
+            color: red;
+        }
+
+        /* Honeypot: visually hidden but accessible to bots */
+        .hp-field {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 0;
+            width: 0;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Athena Shield Protection</h1>
+
+    <!-- Honeypot Field -->
+    <input type="text" name="website_url" class="hp-field" id="hp_input" autocomplete="off" tabindex="-1">
+
+    Status: <span id="status">Checking...</span>
+    <br><br>
+    <button onclick="runCheck()">Run Check</button>
+
+    <script type="module">
+        // Real-time Collector for Test Page
+        const movements = [];
+        const keys = [];
+        const startTime = Date.now();
+
+        document.addEventListener('mousemove', (e) => {
+            if (movements.length < 50) movements.push([e.clientX, e.clientY, Date.now()]);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (keys.length < 50) keys.push([e.code, Date.now()]);
+        });
+
+        async function runCheck() {
+            const status = document.getElementById('status');
+            status.textContent = "Analyzing...";
+            status.style.color = "orange";
+
+            const payload = {
+                user_agent: navigator.userAgent,
+                screen_resolution: `${screen.width}x${screen.height}`,
+                timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                language: navigator.language,
+                platform: navigator.platform,
+                hardware_concurrency: navigator.hardwareConcurrency || 4,
+                webdriver: navigator.webdriver || false,
+
+                // LIVE DATA
+                mouse_movements: movements,
+                keystrokes: keys,
+                time_on_page: Date.now() - startTime,
+                honeypot_triggered: document.getElementById('hp_input') ? document.getElementById('hp_input').value.length > 0 : false
+            };
+
+            try {
+                // Ensure we hit the backend port 8000
+                const response = await fetch('http://localhost:8000/api/v1/telemetry', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+
+                const data = await response.json();
+                status.textContent = `Verdict: ${data.verdict.toUpperCase()} (Confidence: ${data.confidence})`;
+                status.style.color = data.verdict === 'bot' ? '#ff5252' : '#69f0ae';
+            } catch (e) {
+                status.textContent = "Error connecting to shield (Check Console)";
+                status.style.color = "red";
+                console.error(e);
+            }
+        }
+
+        // Expose to window for button onclick
+        window.runCheck = runCheck;
+    </script>
+</body>
+
+</html>
