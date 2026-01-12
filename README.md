@@ -108,12 +108,10 @@ We verify our defenses against our own offensive tools.
 
 <br />
 
-## 📜 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
 <div align="center">
-  <b>Built with 💻 & 🛡️ by Abdul Salam</b>
+  <b>Built with ❤️ & 💻 by Abdul Salam</b>
 </div>
