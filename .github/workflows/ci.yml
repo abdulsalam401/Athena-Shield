@@ -22,7 +22,12 @@ jobs:
         cd backend
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest httpx
+        pip install pytest httpx bandit safety
+        
+    - name: Security Audit (Bandit)
+      run: |
+        cd backend
+        bandit -r app/ -ll
         
     - name: Run Tests
       run: |

@@ -23,7 +23,19 @@ class BehaviorModel:
         if not mouse_movements or len(mouse_movements) < 2:
             return [0, 0, 0, 0]
 
-        points = np.array(mouse_movements)
+        points_list = []
+        for p in mouse_movements:
+            # Handle Dictionary (from benchmark script)
+            if isinstance(p, dict):
+                points_list.append([p['x'], p['y'], p['timestamp']])
+            # Handle Pydantic Model (from API)
+            elif hasattr(p, 'x') and hasattr(p, 'y') and hasattr(p, 'timestamp'):
+                points_list.append([p.x, p.y, p.timestamp])
+            # Handle List/Tuple
+            elif isinstance(p, (list, tuple)) and len(p) >= 3:
+                points_list.append(p[:3])
+        
+        points = np.array(points_list)
         # Calculate distances and times
         deltas = np.diff(points, axis=0) # [[dx, dy, dt], ...]
         dists = np.sqrt(deltas[:, 0]**2 + deltas[:, 1]**2)
