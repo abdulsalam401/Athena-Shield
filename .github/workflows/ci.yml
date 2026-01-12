@@ -1,0 +1,50 @@
+name: Athena Shield CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+        
+    - name: Install Dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest httpx
+        
+    - name: Run Tests
+      run: |
+        cd backend
+        pytest
+
+  dashboard-build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        
+    - name: Install dependencies
+      run: |
+        cd dashboard
+        npm install
+        
+    - name: Build
+      run: |
+        cd dashboard
+        npm run build
