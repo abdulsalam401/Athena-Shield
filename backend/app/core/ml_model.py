@@ -69,35 +69,35 @@ class BehaviorModel:
     def predict(self, mouse_movements):
         """
         Return anomaly score. 
-        Higher score = More likely Human (normal).
-        Lower score = More likely Bot (anomalous).
-        
-        Since we don't have a trained model, we will use Heuristic Logic 
-        derived from our 'Smart Bot' observations.
+        Higher score = More likely Bot (anomalous).
+        Lower score = More likely Human (normal).
         """
+        if not mouse_movements or len(mouse_movements) < 2:
+            return 0.0, []
+
         features = self.extract_features(mouse_movements)
         avg_speed, std_speed, avg_accel, straightness = features
 
-        score = 0
+        score = 0.0
         flags = []
 
         # 1. Variance Check
-        # Bots (even smart ones) often move at constant speeds or perfect curves
-        # Humans have high variance (jitter)
-        # Puppeteer 'steps' create very uniform speed segments
-        if std_speed < 2.0: # Previously 0.1, increasing sensitivity. Humans are very jerky.
+        # Bots move with constant speed segments (low variance).
+        # Humans exhibit natural tremor and non-linear acceleration.
+        if std_speed < 0.35:
             flags.append("robotic_speed_uniformity")
             score += 0.6 
         
         # 2. Speed limit
-        if avg_speed > 3.0: # Lowered from 5.0
+        # > 4.5 px/ms corresponds to > 4,500 px/sec across screen.
+        if avg_speed > 4.5:
             flags.append("superhuman_speed")
             score += 0.8
 
         # 3. Straightness
-        # Lowered threshold. Real mouse paths effectively always wind a bit.
+        # Mathematical straight lines (> 0.95 efficiency) over 5+ sampled points indicate scripted movement.
         if straightness > 0.95 and len(mouse_movements) > 5:
             flags.append("perfect_straight_line")
             score += 0.7
             
-        return score, flags
+        return min(1.0, score), flags

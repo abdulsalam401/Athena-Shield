@@ -2,8 +2,15 @@
 import requests
 import json
 import time
+import sys
 
-URL = "http://localhost:8000/api/v1/telemetry"
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
+URL = "http://127.0.0.1:8000/api/v1/telemetry"
 
 def run_dumb_bot():
     print("🤖 Starting DUMB BOT attack...")

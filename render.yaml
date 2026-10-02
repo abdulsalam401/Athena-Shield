@@ -1,0 +1,27 @@
+# Render.com Blueprint for Athena Shield
+# Automatically provisions the FastAPI Backend and React Dashboard
+version: "1"
+
+services:
+  # 1. Athena Cortex Backend (FastAPI + Python ML)
+  - type: web
+    name: athena-shield-backend
+    env: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: USE_MOCK_REDIS
+        value: "true"
+
+  # 2. Athena Overwatch Dashboard (React + Vite SPA)
+  - type: web
+    name: athena-shield-dashboard
+    env: static
+    rootDir: dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    plan: free

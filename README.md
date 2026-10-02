@@ -58,20 +58,26 @@ Deploy the entire stack in under 2 minutes using Docker.
 *   Docker & Docker Compose
 *   (Optional) Node.js & Python for local dev
 
-### 📦 One-Click Deployment
+### 💻 Local One-Click Launch (Python + Node.js)
+
+Run all services simultaneously without Docker:
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/your-username/athena-shield.git
-cd athena-shield
-
-# 2. Launch the Fortress 🛡️
-sudo docker-compose up --build -d
+# Double-click start_all.bat (Windows) OR run:
+python run_system.py
 ```
 
-### 🚦 Verification
-*   **Dashboard**: Visit `http://localhost`
-*   **API Documentation**: Visit `http://localhost:8000/docs`
+This starts:
+* **Overwatch UI Dashboard**: `http://localhost:5173`
+* **Biometrics & Threat Lab**: `http://localhost:5500/test_page.html`
+* **Cortex Engine Backend**: `http://localhost:8000` (Docs: `http://localhost:8000/docs`)
+
+### 📦 Docker Deployment
+
+```bash
+# Launch via Docker Compose
+docker-compose up --build -d
+```
 
 <br />
 
